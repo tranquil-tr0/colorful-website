@@ -7,6 +7,7 @@ function getContrastYIQ(hexColor: string): string {
   return yiq >= 128 ? "#222" : "#fff";
 }
 import React, { useState, useCallback } from "react";
+import EpilepsyWarning from "./EpilepsyWarning";
 import "./App.css";
 
 function getRandomColor() {
@@ -30,6 +31,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [bgColor, setBgColor] = useState<string>(getRandomColor());
   const [textColor, setTextColor] = useState<string>(getContrastYIQ(bgColor));
+  const [showWarning, setShowWarning] = useState(true);
 
   const changeColor = useCallback(() => {
     const color = getRandomColor();
@@ -41,6 +43,7 @@ function App() {
   }, []);
 
   React.useEffect(() => {
+    if (showWarning) return;
     // Use a stable handler to avoid stale closure
     const handler = () => {
       changeColor();
@@ -57,30 +60,37 @@ function App() {
       window.removeEventListener("mousemove", handler);
       window.removeEventListener("touchstart", handler);
     };
-  }, [changeColor]);
+  }, [changeColor, showWarning]);
 
   return (
     <div style={{ color: textColor }}>
-      <h1>all the colors :3</h1>
-      <div className="card">
-        <button
-          style={{
-            background: "none",
-            border: "1px solid",
-            fontWeight: "bold",
-            color: textColor,
-            padding: "0.5em 1em",
-            cursor: "pointer",
-          }}
-          disabled
-        >
-          changed the color {count} times
-        </button>
-        <p>amazing amazing color color</p>
-      </div>
-      <p className="read-the-docs" style={{ color: textColor }}>
-        bing bong color !!!
-      </p>
+      {showWarning && (
+        <EpilepsyWarning onContinue={() => setShowWarning(false)} />
+      )}
+      {!showWarning && (
+        <>
+          <h1>all the colors :3</h1>
+          <div className="card">
+            <button
+              style={{
+                background: "none",
+                border: "1px solid",
+                fontWeight: "bold",
+                color: textColor,
+                padding: "0.5em 1em",
+                cursor: "pointer",
+              }}
+              disabled
+            >
+              changed the color {count} times
+            </button>
+            <p>amazing amazing color color</p>
+          </div>
+          <p className="read-the-docs" style={{ color: textColor }}>
+            bing bong color !!!
+          </p>
+        </>
+      )}
     </div>
   );
 }
