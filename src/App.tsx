@@ -6,7 +6,7 @@ function getContrastYIQ(hexColor: string): string {
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
   return yiq >= 128 ? "#222" : "#fff";
 }
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./App.css";
 
 function getRandomColor() {
@@ -31,48 +31,55 @@ function App() {
   const [bgColor, setBgColor] = useState<string>(getRandomColor());
   const [textColor, setTextColor] = useState<string>(getContrastYIQ(bgColor));
 
-  const changeColor = () => {
+  const changeColor = useCallback(() => {
     const color = getRandomColor();
     setBgColor(color);
     setTextColor(getContrastYIQ(color));
     document.body.style.backgroundColor = color;
     document.body.style.color = getContrastYIQ(color);
-  };
-
-  // Attach listeners for all user interactions
-  const handleUserInteraction = () => {
-    changeColor();
-  };
+    setCount((count) => count + 1);
+  }, []);
 
   React.useEffect(() => {
-    window.addEventListener("click", handleUserInteraction);
-    window.addEventListener("keydown", handleUserInteraction);
-    window.addEventListener("mousemove", handleUserInteraction);
-    window.addEventListener("touchstart", handleUserInteraction);
+    // Use a stable handler to avoid stale closure
+    const handler = () => {
+      changeColor();
+    };
+    window.addEventListener("click", handler);
+    window.addEventListener("keydown", handler);
+    window.addEventListener("mousemove", handler);
+    window.addEventListener("touchstart", handler);
     // Set initial color
     changeColor();
     return () => {
-      window.removeEventListener("click", handleUserInteraction);
-      window.removeEventListener("keydown", handleUserInteraction);
-      window.removeEventListener("mousemove", handleUserInteraction);
-      window.removeEventListener("touchstart", handleUserInteraction);
+      window.removeEventListener("click", handler);
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("mousemove", handler);
+      window.removeEventListener("touchstart", handler);
     };
-  }, []);
+  }, [changeColor]);
 
   return (
     <div style={{ color: textColor }}>
-      <h1>Colorful Website</h1>
+      <h1>all the colors :3</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          You have changed the color {count} times
+        <button
+          style={{
+            background: "none",
+            border: "1px solid",
+            fontWeight: "bold",
+            color: textColor,
+            padding: "0.5em 1em",
+            cursor: "pointer",
+          }}
+          disabled
+        >
+          changed the color {count} times
         </button>
-        <p>
-          Enjoy a burst of bright colors every time you interact with the page!
-        </p>
+        <p>amazing amazing color color</p>
       </div>
       <p className="read-the-docs" style={{ color: textColor }}>
-        Click, type, move mouse, or touch anywhere to experience a new bright
-        color!
+        bing bong color !!!
       </p>
     </div>
   );
