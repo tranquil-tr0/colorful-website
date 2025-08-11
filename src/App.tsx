@@ -1,21 +1,29 @@
 function getContrastYIQ(hexColor: string): string {
-  hexColor = hexColor.replace('#', '');
-  const r = parseInt(hexColor.substr(0,2),16);
-  const g = parseInt(hexColor.substr(2,2),16);
-  const b = parseInt(hexColor.substr(4,2),16);
-  const yiq = (r*299 + g*587 + b*114) / 1000;
-  return yiq >= 128 ? '#222' : '#fff';
+  hexColor = hexColor.replace("#", "");
+  const r = parseInt(hexColor.substr(0, 2), 16);
+  const g = parseInt(hexColor.substr(2, 2), 16);
+  const b = parseInt(hexColor.substr(4, 2), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "#222" : "#fff";
 }
 import React, { useState } from "react";
 import "./App.css";
 
 function getRandomColor() {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  // Neon color palette (hex codes)
+  const neonColors = [
+    "#39FF14", // Neon Green
+    "#FF073A", // Neon Red
+    "#F7FF00", // Neon Yellow
+    "#00FFFF", // Neon Cyan
+    "#FF00FF", // Neon Magenta
+    "#FF5F1F", // Neon Orange
+    "#FE019A", // Neon Pink
+    "#0FF0FC", // Neon Aqua
+    "#BFFF00", // Neon Lime
+    "#FFD700", // Neon Gold
+  ];
+  return neonColors[Math.floor(Math.random() * neonColors.length)];
 }
 
 function App() {
@@ -28,7 +36,6 @@ function App() {
     setBgColor(color);
     setTextColor(getContrastYIQ(color));
     document.body.style.backgroundColor = color;
-    document.body.style.transition = 'background 0.3s';
     document.body.style.color = getContrastYIQ(color);
   };
 
@@ -53,7 +60,7 @@ function App() {
   }, []);
 
   return (
-    <div style={{ color: textColor, transition: 'color 0.3s' }}>
+    <div style={{ color: textColor }}>
       <h1>Colorful Website</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -63,8 +70,9 @@ function App() {
           Enjoy a burst of bright colors every time you interact with the page!
         </p>
       </div>
-      <p className="read-the-docs" style={{ color: textColor, transition: 'color 0.3s' }}>
-        Click, type, move mouse, or touch anywhere to experience a new bright color!
+      <p className="read-the-docs" style={{ color: textColor }}>
+        Click, type, move mouse, or touch anywhere to experience a new bright
+        color!
       </p>
     </div>
   );
