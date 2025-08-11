@@ -6,7 +6,7 @@ function getContrastYIQ(hexColor: string): string {
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
   return yiq >= 128 ? "#222" : "#fff";
 }
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import EpilepsyWarning from "./EpilepsyWarning";
 import "./App.css";
 
@@ -29,6 +29,9 @@ function getRandomColor() {
 
 function App() {
   const [count, setCount] = useState(0);
+  const [flyingCounts, setFlyingCounts] = useState<
+    Array<{ id: number; value: number }>
+  >([]);
   const [bgColor, setBgColor] = useState<string>(getRandomColor());
   const [textColor, setTextColor] = useState<string>(getContrastYIQ(bgColor));
   const [showWarning, setShowWarning] = useState(true);
@@ -41,6 +44,18 @@ function App() {
     document.body.style.color = getContrastYIQ(color);
     setCount((count) => count + 1);
   }, []);
+
+  // Add a flying count element whenever count changes
+  useEffect(() => {
+    if (count === 0) return;
+    const id = Date.now() + Math.random();
+    setFlyingCounts((prev) => [...prev, { id, value: count }]);
+    // Remove after animation (2s)
+    const timeout = setTimeout(() => {
+      setFlyingCounts((prev) => prev.filter((item) => item.id !== id));
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [count]);
 
   React.useEffect(() => {
     if (showWarning) return;
@@ -63,7 +78,28 @@ function App() {
   }, [changeColor, showWarning]);
 
   return (
-    <div style={{ color: textColor }}>
+    <div style={{ color: textColor, position: "relative", overflow: "hidden" }}>
+      {/* Flying count elements */}
+      {flyingCounts.map(({ id, value }) => (
+        <div
+          key={id}
+          style={{
+            position: "fixed",
+            left: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            animation: "fly-rotate 2s linear forwards",
+            fontSize: "2em",
+            fontWeight: "bold",
+            color: textColor,
+            pointerEvents: "none",
+            zIndex: 1000,
+          }}
+        >
+          {value}
+        </div>
+      ))}
+      {/* Main content */}
       {showWarning && (
         <EpilepsyWarning onContinue={() => setShowWarning(false)} />
       )}
