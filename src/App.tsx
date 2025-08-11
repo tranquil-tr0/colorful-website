@@ -53,7 +53,7 @@ function App() {
   }, []);
 
   return (
-    <div style={{ color: textColor }}>
+    <div style={{ color: textColor, transition: 'color 0.3s' }}>
       <h1>Colorful Website</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -63,7 +63,7 @@ function App() {
           Enjoy a burst of bright colors every time you interact with the page!
         </p>
       </div>
-      <p className="read-the-docs">
+      <p className="read-the-docs" style={{ color: textColor, transition: 'color 0.3s' }}>
         Click, type, move mouse, or touch anywhere to experience a new bright color!
       </p>
     </div>
