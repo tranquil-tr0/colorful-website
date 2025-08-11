@@ -1,3 +1,36 @@
+/* Font-face declarations for Comic Sans, Papyrus, Party LET, and Wingdings */
+@font-face {
+  font-family: 'Comic Sans MS';
+  src: local('Comic Sans MS'), local('Comic Sans'), url('https://fonts.cdnfonts.com/s/15171/ComicSansMS.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Papyrus';
+  src: local('Papyrus');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Party LET';
+  src: local('Party LET');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Wingdings';
+  src: local('Wingdings');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Apply the exclusive font stack globally */
+body, html, #root {
+  font-family: 'Comic Sans MS', 'Papyrus', 'Party LET', 'Wingdings', cursive !important;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

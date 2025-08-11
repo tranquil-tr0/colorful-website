@@ -21,7 +21,7 @@ const EpilepsyWarning: React.FC<EpilepsyWarningProps> = ({ onContinue }) => (
       zIndex: 9999,
     }}
   >
-    <h2>Epilepsy Warning</h2>
+    <h1>Epilepsy Warning</h1>
     <p style={{ maxWidth: 400, textAlign: "center" }}>
       This website contains rapidly changing colors and flashing images that may
       trigger seizures for people with photosensitive epilepsy. Viewer
