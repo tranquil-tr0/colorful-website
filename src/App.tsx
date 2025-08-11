@@ -1,6 +1,12 @@
+function getContrastYIQ(hexColor: string): string {
+  hexColor = hexColor.replace('#', '');
+  const r = parseInt(hexColor.substr(0,2),16);
+  const g = parseInt(hexColor.substr(2,2),16);
+  const b = parseInt(hexColor.substr(4,2),16);
+  const yiq = (r*299 + g*587 + b*114) / 1000;
+  return yiq >= 128 ? '#222' : '#fff';
+}
 import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 function getRandomColor() {
@@ -13,11 +19,17 @@ function getRandomColor() {
 }
 
 function App() {
-  const [bgColor, setBgColor] = useState<string>("#ffffff");
   const [count, setCount] = useState(0);
+  const [bgColor, setBgColor] = useState<string>(getRandomColor());
+  const [textColor, setTextColor] = useState<string>(getContrastYIQ(bgColor));
 
   const changeColor = () => {
-    setBgColor(getRandomColor());
+    const color = getRandomColor();
+    setBgColor(color);
+    setTextColor(getContrastYIQ(color));
+    document.body.style.backgroundColor = color;
+    document.body.style.transition = 'background 0.3s';
+    document.body.style.color = getContrastYIQ(color);
   };
 
   // Attach listeners for all user interactions
@@ -25,12 +37,13 @@ function App() {
     changeColor();
   };
 
-  // Use effect to add global listeners
   React.useEffect(() => {
     window.addEventListener("click", handleUserInteraction);
     window.addEventListener("keydown", handleUserInteraction);
     window.addEventListener("mousemove", handleUserInteraction);
     window.addEventListener("touchstart", handleUserInteraction);
+    // Set initial color
+    changeColor();
     return () => {
       window.removeEventListener("click", handleUserInteraction);
       window.removeEventListener("keydown", handleUserInteraction);
@@ -40,32 +53,18 @@ function App() {
   }, []);
 
   return (
-    <div
-      style={{
-        backgroundColor: bgColor,
-        minHeight: "100vh",
-        transition: "background 0.3s",
-      }}
-    >
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+    <div style={{ color: textColor }}>
+      <h1>Colorful Website</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          You have changed the color {count} times
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Enjoy a burst of bright colors every time you interact with the page!
         </p>
       </div>
       <p className="read-the-docs">
-        Click, type, move mouse, or touch anywhere to change the color!
+        Click, type, move mouse, or touch anywhere to experience a new bright color!
       </p>
     </div>
   );
